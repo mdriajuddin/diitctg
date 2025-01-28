@@ -182,3 +182,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH = {
     'USE_JWT': True,
 }
+
+
+
+
+REST_FRAMEWORK += {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/min',        # 10 requests per minute for anonymous users
+        'user': '100/day',       # 100 requests per day for authenticated users
+        'custom_scope': '10/min',  # Custom scope throttling rate
+    },
+}

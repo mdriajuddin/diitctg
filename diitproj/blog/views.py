@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Post
 from .serializers import PostSerializer
+from .throttling import SlidingWindowThrottle
+
 
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
@@ -16,7 +18,12 @@ class PostListCreateView(generics.ListCreateAPIView):
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    throttle_classes = [SlidingWindowThrottle]
+    throttle_scope = 'custom_scope'
+
     permission_classes = [IsAuthenticated]
+
 
     def perform_update(self, serializer):
         # Ensure only the author can update the post
